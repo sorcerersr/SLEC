@@ -3,7 +3,10 @@
 use dioxus::prelude::*;
 
 mod components;
-use components::DarkModeToggle;
+use components::{DarkModeToggle, Slider};
+
+mod model;
+use model::ShutterSpeed;
 
 fn main() {
     // launch the web app
@@ -60,19 +63,19 @@ pub fn Footer(cx: Scope) -> Element {
 }
 
 pub fn ShutterSpeed(cx: Scope) -> Element {
-    let mut shutter_index = 27;
-    let label_text = format!("Shutter Speed = {}", shutter_index);
+    let shutter_speeds = ShutterSpeed::shutter_speed_array();
+    let index_of_selected_shutter_speed = use_state(cx, || 26);
+    let label = shutter_speeds[*index_of_selected_shutter_speed.get()]
+        .display_text
+        .clone();
     cx.render(rsx! {
-        label { "for": "shutter_speed",
-            label_text,
-            input {
-                r#type: "range",
-                oninput: move |event| { shutter_index = event.value.parse::<i64>().unwrap() },
-                min: "0",
-                max: "54",
-                value: "{shutter_index}",
-                id: "shutter_speed_slider",
-                name: "shutter_speed"
+        Slider {
+            min: 0,
+            max: shutter_speeds.len() - 1,
+            value: *index_of_selected_shutter_speed.get(),
+            label: label,
+            on_input: move |event: FormEvent| {
+                index_of_selected_shutter_speed.set(event.value.parse::<usize>().unwrap());
             }
         }
     })
