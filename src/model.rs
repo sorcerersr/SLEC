@@ -71,3 +71,45 @@ impl ShutterSpeed {
         speeds
     }
 }
+
+#[derive(PartialEq, Clone)]
+pub struct Filter {
+    pub factor: u64,
+    pub density: f64,
+    pub fstop_reduction: f64,
+    pub display_name: String,
+    pub selected: bool,
+}
+
+impl Filter {
+    pub fn filter_array() -> [Filter; 3] {
+        let filters: [Filter; 3] = [
+            Filter {
+                factor: 8,
+                density: 0.9,
+                fstop_reduction: 3.0,
+                display_name: "ND8".to_owned(),
+                selected: false,
+            },
+            Filter {
+                factor: 64,
+                density: 1.8,
+                fstop_reduction: 6.0,
+                display_name: "ND64".to_owned(),
+                selected: false,
+            },
+            Filter {
+                factor: 1024,
+                density: 3.0,
+                fstop_reduction: 10.0,
+                display_name: "ND1000".to_owned(),
+                selected: false,
+            },
+        ];
+        filters
+    }
+
+    pub fn set_selected(&mut self, selected: bool) {
+        self.selected = selected;
+    }
+}

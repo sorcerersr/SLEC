@@ -1,4 +1,5 @@
 #![allow(non_snake_case)]
+
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 use dioxus::prelude::*;
 
@@ -6,7 +7,7 @@ mod components;
 use components::{DarkModeToggle, Slider};
 
 mod model;
-use model::ShutterSpeed;
+use model::{Filter, ShutterSpeed};
 
 fn main() {
     // launch the web app
@@ -15,11 +16,13 @@ fn main() {
 
 struct AppState {
     shutter_speed: f64,
+    total_fstop_reduction: f64,
 }
 
 fn app(cx: Scope) -> Element {
     use_shared_state_provider(cx, || AppState {
         shutter_speed: 1.0 / 15.0,
+        total_fstop_reduction: 0.0,
     });
     cx.render(rsx! {
         Header {}
@@ -52,13 +55,12 @@ pub fn Main(cx: Scope) -> Element {
 
         main { class: "container",
 
-            section { class: "section", ShutterSpeed {} }
             section { class: "section",
-                div { class: "container", span { color: "is-white", "Hello, world!" } }
+                ShutterSpeed {}
+                Filters {}
             }
-            section { class: "section",
-                "Time to expose: {app_state.read().shutter_speed}"
-                 }
+            section { class: "section", FinalExposure {} }
+            section { class: "section", "f-stop reduction: {app_state.read().total_fstop_reduction:}" }
         }
     })
 }
@@ -92,4 +94,41 @@ pub fn ShutterSpeed(cx: Scope) -> Element {
             }
         }
     })
+}
+
+pub fn Filters(cx: Scope) -> Element {
+    let filters = use_ref(cx, || Filter::filter_array());
+    let app_state = use_shared_state::<AppState>(cx).unwrap();
+    let fstop_reduction = filters
+        .read()
+        .iter()
+        .filter(|filter| filter.selected)
+        .map(|filter| filter.fstop_reduction)
+        .sum::<f64>();
+
+    if app_state.read().total_fstop_reduction != fstop_reduction {
+        app_state.write().total_fstop_reduction = fstop_reduction;
+    }
+
+    cx.render(rsx! {
+        div { class: "grid",
+            (0..filters.read().len()).map(|index| rsx!(
+                        div{ margin:"10px 0px",
+                                    input {
+
+                                    oninput: move |event|
+                                              filters.write().get_mut(index).unwrap().set_selected(event.value == "true"),
+                                         "type":"checkbox", id:"filter_switch", name:"filter_switch", role:"switch"},
+                                    filters.read().get(index).unwrap().display_name.clone(),
+                                    }
+            ))
+        }
+    })
+}
+
+pub fn FinalExposure(cx: Scope) -> Element {
+    let app_state = use_shared_state::<AppState>(cx).unwrap();
+    let exposure_time =
+        app_state.read().shutter_speed * app_state.read().total_fstop_reduction.exp2();
+    cx.render(rsx! {"Time to expose: {exposure_time}"})
 }
