@@ -1,5 +1,8 @@
 #![allow(non_snake_case)]
 
+use humantime::format_duration;
+use std::time::Duration;
+
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 use dioxus::prelude::*;
 
@@ -27,7 +30,6 @@ fn app(cx: Scope) -> Element {
     cx.render(rsx! {
         Header {}
         Main {}
-        Footer {}
     })
 }
 
@@ -36,7 +38,10 @@ pub fn Header(cx: Scope) -> Element {
         header { class: "container",
             nav {
                 ul {
-                    li { strong { "📷 SLEC" } }
+                    li {
+                        strong { "📷 SLEC  " }
+                        small { env!("CARGO_PKG_VERSION") }
+                    }
                 }
                 ul {
                     li { DarkModeToggle {} }
@@ -60,16 +65,6 @@ pub fn Main(cx: Scope) -> Element {
                 Filters {}
             }
             section { class: "section", FinalExposure {} }
-            section { class: "section", "f-stop reduction: {app_state.read().total_fstop_reduction:}" }
-        }
-    })
-}
-
-pub fn Footer(cx: Scope) -> Element {
-    cx.render(rsx! {
-
-        footer { class: "container",
-            section { class: "section has-dark-background", env!("CARGO_PKG_VERSION") }
         }
     })
 }
@@ -128,7 +123,21 @@ pub fn Filters(cx: Scope) -> Element {
 
 pub fn FinalExposure(cx: Scope) -> Element {
     let app_state = use_shared_state::<AppState>(cx).unwrap();
+    // calculate the shutter speed for the final exposure
     let exposure_time =
         app_state.read().shutter_speed * app_state.read().total_fstop_reduction.exp2();
-    cx.render(rsx! {"Time to expose: {exposure_time}"})
+    // format the result to be more human friendly
+    let exposure_time = if exposure_time > 30.0 {
+        // above 30 sec truncate the miliseconds
+        (exposure_time.trunc() * 1000.0) as u64
+    } else {
+        (exposure_time * 1000.0).trunc() as u64
+    };
+    let duration = Duration::from_millis(exposure_time);
+    let formated_duration = format_duration(duration);
+    cx.render(rsx! {
+
+        div { "Time to expose: " }
+        div { h2 { "{formated_duration}" } }
+    })
 }
