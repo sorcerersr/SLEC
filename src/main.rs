@@ -17,17 +17,35 @@ fn main() {
     dioxus_web::launch(app);
 }
 
+enum View {
+    Calculator,
+    Settings,
+}
+
 struct AppState {
+    view: View,
     shutter_speed: f64,
     total_fstop_reduction: f64,
+}
+
+impl AppState {
+    pub fn toggle_view(&mut self) {
+        match self.view {
+            View::Calculator => self.view = View::Settings,
+            View::Settings => self.view = View::Calculator,
+        }
+    }
 }
 
 fn app(cx: Scope) -> Element {
     use_shared_state_provider(cx, || AppState {
         shutter_speed: 1.0 / 15.0,
         total_fstop_reduction: 0.0,
+        view: View::Calculator,
     });
+
     cx.render(rsx! {
+
         Header {}
         Main {}
     })
@@ -46,7 +64,7 @@ pub fn Header(cx: Scope) -> Element {
                 ul {
                     li { DarkModeToggle {} }
 
-                    li { "⚙️" }
+                    li { GearLink {} }
                     li {}
                 }
             }
@@ -54,8 +72,32 @@ pub fn Header(cx: Scope) -> Element {
     })
 }
 
+fn GearLink(cx: Scope) -> Element {
+    let app_state = use_shared_state::<AppState>(cx).unwrap();
+
+    cx.render(rsx!(
+        a { onclick: move |event| {
+                app_state.write().toggle_view();
+            }, href: "#", "⚙️" }
+    ))
+}
+
 pub fn Main(cx: Scope) -> Element {
     let app_state = use_shared_state::<AppState>(cx).unwrap();
+
+    cx.render(rsx!(match app_state.read().view {
+        View::Calculator => rsx!(Calculator {}),
+        View::Settings => rsx!(Settings {}),
+    }))
+}
+
+pub fn Settings(cx: Scope) -> Element {
+    cx.render(rsx!(
+        main { class: "container", section { class: "section", "settings...." } }
+    ))
+}
+
+pub fn Calculator(cx: Scope) -> Element {
     cx.render(rsx! {
 
         main { class: "container",
