@@ -1,6 +1,8 @@
 #![allow(non_snake_case)]
 
+rust_i18n::i18n!("locales", fallback = "en");
 use dioxus::prelude::*;
+
 mod components;
 mod model;
 use components::DarkModeToggle;
@@ -12,6 +14,9 @@ mod settings;
 use settings::Settings;
 
 fn main() {
+    // init i18n before doing anything else
+    rust_i18n::set_locale("en");
+
     // launch the web app
     dioxus_web::launch(app);
 }

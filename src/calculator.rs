@@ -1,5 +1,6 @@
 use crate::AppState;
 use dioxus::prelude::*;
+use rust_i18n::t;
 
 use humantime::format_duration;
 
@@ -88,7 +89,7 @@ pub fn FinalExposure(cx: Scope) -> Element {
     let formated_duration = format_duration(duration);
     cx.render(rsx! {
 
-        div { "Time to expose: " }
+        div { t!("time_to_expose"), ": " }
         div { h2 { "{formated_duration}" } }
     })
 }

@@ -9,6 +9,7 @@ edition = "2021"
 dioxus = "0.3.2"
 dioxus-web = "0.3.2"
 humantime = "2.1.0"
+rust-i18n = "2.0.0"
 wasm-bindgen = "0.2"
 
 [dependencies.web-sys]

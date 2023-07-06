@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use rust_i18n::t;
 
 #[inline_props]
 pub fn Slider<'a>(
@@ -9,10 +10,10 @@ pub fn Slider<'a>(
     label: String,
     on_input: EventHandler<'a, FormEvent>,
 ) -> Element<'a> {
+    let label_text = format!("{} : {}", t!("shutterspeed"), label);
     cx.render(rsx! {
-
         label { "for": "range",
-            "Shutter Speed : {label}"
+            "{label_text}",
             input {
                 "type": "range",
                 min: "{min}",
