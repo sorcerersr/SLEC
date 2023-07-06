@@ -1,4 +1,5 @@
 # SLEC
-SLEC - Sorcerers Long Exposure Calculator - A simple photographie tool to calculate shutter time for long exposures when using ND filters.
+SLEC - Sorcerers Long Exposure Calculator - A simple photography tool to calculate shutter 
+time for long exposures when using ND filters.
 
 [https://sorcerersr.github.io/](https://sorcerersr.github.io/)
