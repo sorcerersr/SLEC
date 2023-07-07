@@ -10,13 +10,13 @@ use components::DarkModeToggle;
 mod calculator;
 use calculator::Calculator;
 
+mod languages;
+
 mod settings;
+use languages::Language;
 use settings::Settings;
 
 fn main() {
-    // init i18n before doing anything else
-    rust_i18n::set_locale("en");
-
     // launch the web app
     dioxus_web::launch(app);
 }
@@ -27,6 +27,7 @@ enum View {
 }
 
 struct AppState {
+    language: Language,
     view: View,
     shutter_speed: f64,
     total_fstop_reduction: f64,
@@ -42,7 +43,12 @@ impl AppState {
 }
 
 fn app(cx: Scope) -> Element {
+    // init i18n before doing anything else
+    let language = languages::init();
+
+    // init application wide state
     use_shared_state_provider(cx, || AppState {
+        language,
         shutter_speed: 1.0 / 15.0,
         total_fstop_reduction: 0.0,
         view: View::Calculator,
