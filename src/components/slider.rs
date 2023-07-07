@@ -13,7 +13,7 @@ pub fn Slider<'a>(
     let label_text = format!("{} : {}", t!("shutterspeed"), label);
     cx.render(rsx! {
         label { "for": "range",
-            "{label_text}",
+            "{label_text}"
             input {
                 "type": "range",
                 min: "{min}",
