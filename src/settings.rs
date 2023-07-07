@@ -8,8 +8,19 @@ use rust_i18n::t;
 pub fn Settings(cx: Scope) -> Element {
     cx.render(rsx!(
         main { class: "container",
-                   LanguageSelection {}
+            BackButton {},
+            LanguageSelection {}
 
+        }
+    ))
+}
+
+pub fn BackButton(cx: Scope) -> Element {
+    let app_state = use_shared_state::<AppState>(cx).unwrap();
+    cx.render(rsx!(
+        button {
+            onclick: move |_| {app_state.write().toggle_view()},
+            t!("back")
         }
     ))
 }
