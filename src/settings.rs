@@ -9,7 +9,10 @@ pub fn Settings(cx: Scope) -> Element {
     cx.render(rsx!(
         main { class: "container",
             BackButton {},
-            LanguageSelection {}
+            LanguageSelection {},
+            CustomFilter{},
+            About{},
+            BackButton {}
 
         }
     ))
@@ -27,7 +30,6 @@ pub fn BackButton(cx: Scope) -> Element {
 
 pub fn LanguageSelection(cx: Scope) -> Element {
     let app_state = use_shared_state::<AppState>(cx).unwrap();
-    // let current_language = &app_state.read().language;
     cx.render(rsx!(
          article {
               h3 { t!("language") },
@@ -61,6 +63,25 @@ pub fn LanguageSelection(cx: Scope) -> Element {
                 }
                 }
             }
+        }
+    ))
+}
+
+pub fn CustomFilter(cx: Scope) -> Element {
+    let app_state = use_shared_state::<AppState>(cx).unwrap();
+    cx.render(rsx!(
+        article {
+              h3 { t!("custom_filter") }
+        }
+    ))
+}
+
+pub fn About(cx: Scope) -> Element {
+    // app_state only used here for triggering an rerender when language settings are changed
+    let _app_state = use_shared_state::<AppState>(cx).unwrap();
+    cx.render(rsx!(
+        article {
+              h3 { t!("about") }
         }
     ))
 }

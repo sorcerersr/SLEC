@@ -2,4 +2,6 @@ shutterspeed: Shutterspeed
 time_to_expose: Time to expose
 settings: Settings
 language: Language
-back: back 
+back: back
+custom_filter: Custom filter set
+about: About 
