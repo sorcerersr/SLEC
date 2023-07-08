@@ -11,7 +11,7 @@ fn isDarkModePrefered() -> bool {
 
 fn setDarkModePreference(theme: &str) {
     let window = web_sys::window().unwrap();
-    window
+    let _ = window
         .document()
         .unwrap()
         .document_element()
