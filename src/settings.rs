@@ -79,7 +79,14 @@ pub fn About(cx: Scope) -> Element {
     let _app_state = use_shared_state::<AppState>(cx).unwrap();
     cx.render(rsx!(
         article {
-            h3 { t!("about") }
+            h3 { t!("about") },
+            div {
+                "SLEC - Sorcerers Long Exposure Calculator ",
+                env!("CARGO_PKG_VERSION")
+            },
+            div{
+                a{ href:"https://github.com/sorcerersr/SLEC", "https://github.com/sorcerersr/SLEC"}
+            }
         }
     ))
 }
