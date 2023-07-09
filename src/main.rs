@@ -16,24 +16,28 @@ mod settings;
 use languages::Language;
 use settings::Settings;
 
+// Entrypoint of the application
 fn main() {
     // launch the web app
     dioxus_web::launch(app);
 }
 
+// Enumeration to define the navigatable views
 enum View {
     Calculator,
     Settings,
 }
 
+// struct representing a globale applocation wide state
 struct AppState {
     language: Language,
     view: View,
-    shutter_speed: f64,
-    total_fstop_reduction: f64,
+    shutter_speed: f64, // ToDo: move to prop or local state in Calculator view
+    total_fstop_reduction: f64, // ToDo: move to prop or local state in Calculator view}
 }
 
 impl AppState {
+    // Method for switching between the two views
     pub fn toggle_view(&mut self) {
         match self.view {
             View::Calculator => self.view = View::Settings,
@@ -61,6 +65,8 @@ fn app(cx: Scope) -> Element {
     })
 }
 
+// Header-Bar Component
+// Visible for both views (calculator and settings)
 pub fn Header(cx: Scope) -> Element {
     cx.render(rsx! {
         header { class: "container",
@@ -82,6 +88,7 @@ pub fn Header(cx: Scope) -> Element {
     })
 }
 
+// a clickable gear-icon to show/hide the settings view
 fn GearLink(cx: Scope) -> Element {
     let app_state = use_shared_state::<AppState>(cx).unwrap();
 
@@ -92,6 +99,7 @@ fn GearLink(cx: Scope) -> Element {
     ))
 }
 
+// The main component for the content
 pub fn Main(cx: Scope) -> Element {
     let app_state = use_shared_state::<AppState>(cx).unwrap();
 
