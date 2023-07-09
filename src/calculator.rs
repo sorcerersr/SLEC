@@ -44,7 +44,7 @@ pub fn ShutterSpeed(cx: Scope) -> Element {
 }
 
 pub fn Filters(cx: Scope) -> Element {
-    let filters = use_ref(cx, || Filter::filter_array());
+    let filters = use_ref(cx, || Filter::filter_list());
     let app_state = use_shared_state::<AppState>(cx).unwrap();
     let fstop_reduction = filters
         .read()

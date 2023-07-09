@@ -1,3 +1,7 @@
+use gloo_console::log;
+use gloo_storage::{LocalStorage, Storage};
+use serde::{Deserialize, Serialize};
+
 pub struct ShutterSpeed {
     pub display_text: String,
     pub speed_value: f64,
@@ -72,7 +76,7 @@ impl ShutterSpeed {
     }
 }
 
-#[derive(PartialEq, Clone)]
+#[derive(PartialEq, Clone, Serialize, Deserialize)]
 pub struct Filter {
     pub factor: u64,
     pub density: f64,
@@ -82,8 +86,44 @@ pub struct Filter {
 }
 
 impl Filter {
-    pub fn filter_array() -> [Filter; 3] {
-        let filters: [Filter; 3] = [
+    pub fn filter_list() -> Vec<Filter> {
+        if let Ok(filters_json) = LocalStorage::get::<String>("filters") {
+            if let Ok(filters) = serde_json::from_str(&filters_json) {
+                filters
+            } else {
+                log!("failed to load filter list from LocalStorage! Using default filters");
+                Filter::default_filter_list()
+            }
+        } else {
+            let filters = Filter::default_filter_list();
+            Filter::store_filter_list(&filters);
+            filters
+        }
+    }
+
+    pub fn store_filter_list(filters: &Vec<Filter>) {
+        let json_result = serde_json::to_string(&filters);
+        match json_result {
+            Ok(json) => {
+                let storage_result = LocalStorage::set("filters", json);
+                match storage_result {
+                    Ok(_) => {}
+                    Err(e) => {
+                        log!(
+                            "failed to write filter list to LocalStorage",
+                            format!("{:#?}", e)
+                        );
+                    }
+                }
+            }
+            Err(e) => {
+                log!("failed to serialize filter list", format!("{:#?}", e));
+            }
+        }
+    }
+
+    pub fn default_filter_list() -> Vec<Filter> {
+        let filters = vec![
             Filter {
                 factor: 8,
                 density: 0.9,
