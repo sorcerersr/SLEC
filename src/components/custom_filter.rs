@@ -29,8 +29,34 @@ fn FilterComponent(cx: Scope, filter: Filter) -> Element {
                         name: "display_name",
                         "required"
                     }
-                },
-
+                }
+                label { "for": "fstop_reduction",
+                    t!("filter.fstop_reduction"),
+                    input {
+                        value: "{filter.fstop_reduction}",
+                        "type": "number",
+                        id: "fstop_reduction",
+                        name: "fstop_reduction"
+                    }
+                }
+                label { "for": "factor",
+                    t!("filter.factor"),
+                    input {
+                        value: "{filter.factor}",
+                        "type": "number",
+                        id: "factor",
+                        name: "factor"
+                    }
+                }
+                label { "for": "density",
+                    t!("filter.density"),
+                    input {
+                        value: "{filter.density}",
+                        "type": "number",
+                        id: "density",
+                        name: "density"
+                    }
+                }
             }
         }
     ))

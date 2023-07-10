@@ -5,7 +5,7 @@ language: Language
 back: back
 custom_filter: Custom filter set
 about: About 
-filter.factor: Filter Factor,
+filter.factor: Filter Factor
 filter.density: Optical Density
 filter.fstop_reduction: F-Stop Reduction
 filter.display_name: Display Name
