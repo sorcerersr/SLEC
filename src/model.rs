@@ -83,6 +83,7 @@ pub struct Filter {
     pub fstop_reduction: f64,
     pub display_name: String,
     pub selected: bool,
+    pub id: usize,
 }
 
 impl Filter {
@@ -130,6 +131,7 @@ impl Filter {
                 fstop_reduction: 3.0,
                 display_name: "ND8".to_owned(),
                 selected: false,
+                id: 0,
             },
             Filter {
                 factor: 64,
@@ -137,6 +139,7 @@ impl Filter {
                 fstop_reduction: 6.0,
                 display_name: "ND64".to_owned(),
                 selected: false,
+                id: 1,
             },
             Filter {
                 factor: 1024,
@@ -144,6 +147,7 @@ impl Filter {
                 fstop_reduction: 10.0,
                 display_name: "ND1000".to_owned(),
                 selected: false,
+                id: 3,
             },
         ];
         filters

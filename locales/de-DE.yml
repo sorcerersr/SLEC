@@ -5,3 +5,8 @@ language: Sprache
 back: zurück
 custom_filter: Benutzerdefiniertes Filter-Set
 about: Über die Anwendung 
+filter.factor: Filter Faktor
+filter.density: Optische Dichte
+filter.fstop_reduction: Blendstufen Reduzierung
+filter.display_name: Anzeigename
+filter.calculation_note: für die Berechnung verwendet
