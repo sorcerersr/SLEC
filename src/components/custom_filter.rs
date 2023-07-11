@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 use rust_i18n::t;
 
 pub fn CustomFilter(cx: Scope) -> Element {
-    let app_state = use_shared_state::<AppState>(cx).unwrap();
+    let _app_state = use_shared_state::<AppState>(cx).unwrap();
     let filters = use_ref(cx, || Filter::filter_list());
     cx.render(rsx!(
         article {
@@ -17,6 +17,7 @@ pub fn CustomFilter(cx: Scope) -> Element {
 
 #[inline_props]
 fn FilterComponent(cx: Scope, filter: Filter) -> Element {
+    let _app_state = use_shared_state::<AppState>(cx).unwrap();
     cx.render(rsx!(
         article {
             div { "class": "grid",
@@ -48,15 +49,9 @@ fn FilterComponent(cx: Scope, filter: Filter) -> Element {
                         name: "factor"
                     }
                 }
-                label { "for": "density",
-                    t!("filter.density"),
-                    input {
-                        value: "{filter.density}",
-                        "type": "number",
-                        id: "density",
-                        name: "density"
-                    }
-                }
+            },
+            div { "align": "right",
+                a { "href":"#", role:"button", t!("filter.delete") }
             }
         }
     ))

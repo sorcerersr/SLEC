@@ -79,7 +79,6 @@ impl ShutterSpeed {
 #[derive(PartialEq, Clone, Serialize, Deserialize)]
 pub struct Filter {
     pub factor: u64,
-    pub density: f64,
     pub fstop_reduction: f64,
     pub display_name: String,
     pub selected: bool,
@@ -127,7 +126,6 @@ impl Filter {
         let filters = vec![
             Filter {
                 factor: 8,
-                density: 0.9,
                 fstop_reduction: 3.0,
                 display_name: "ND8".to_owned(),
                 selected: false,
@@ -135,7 +133,6 @@ impl Filter {
             },
             Filter {
                 factor: 64,
-                density: 1.8,
                 fstop_reduction: 6.0,
                 display_name: "ND64".to_owned(),
                 selected: false,
@@ -143,7 +140,6 @@ impl Filter {
             },
             Filter {
                 factor: 1024,
-                density: 3.0,
                 fstop_reduction: 10.0,
                 display_name: "ND1000".to_owned(),
                 selected: false,

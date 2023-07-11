@@ -10,3 +10,4 @@ filter.density: Optische Dichte
 filter.fstop_reduction: Blendstufen Reduzierung
 filter.display_name: Anzeigename
 filter.calculation_note: für die Berechnung verwendet
+filter.delete: 🗑 löschen
