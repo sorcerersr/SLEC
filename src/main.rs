@@ -7,6 +7,9 @@ mod components;
 mod model;
 use components::DarkModeToggle;
 
+mod timer;
+use timer::Timer;
+
 mod calculator;
 use calculator::Calculator;
 
@@ -23,9 +26,11 @@ fn main() {
 }
 
 // Enumeration to define the navigatable views
+#[derive(Clone, Copy)]
 enum View {
     Calculator,
     Settings,
+    Timer,
 }
 
 // struct representing a globale applocation wide state
@@ -38,11 +43,8 @@ struct AppState {
 
 impl AppState {
     // Method for switching between the two views
-    pub fn toggle_view(&mut self) {
-        match self.view {
-            View::Calculator => self.view = View::Settings,
-            View::Settings => self.view = View::Calculator,
-        }
+    pub fn switch_view(&mut self, view: View) {
+        self.view = view;
     }
 }
 
@@ -91,10 +93,14 @@ pub fn Header(cx: Scope) -> Element {
 // a clickable gear-icon to show/hide the settings view
 fn GearLink(cx: Scope) -> Element {
     let app_state = use_shared_state::<AppState>(cx).unwrap();
-
+    let new_view = match app_state.read().view {
+        View::Calculator => View::Settings,
+        View::Settings => View::Calculator,
+        View::Timer => View::Settings,
+    };
     cx.render(rsx!(
         a { onclick: move |_| {
-                app_state.write().toggle_view();
+                app_state.write().switch_view(new_view);
             }, href: "#", "⚙️" }
     ))
 }
@@ -109,6 +115,7 @@ pub fn Main(cx: Scope) -> Element {
         (match app_state.read().view {
             View::Calculator => rsx!(Calculator {}),
             View::Settings => rsx!(Settings {}),
+            View::Timer => rsx!(Timer {}),
         })
     ))
 }

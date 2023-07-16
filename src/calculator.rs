@@ -1,4 +1,4 @@
-use crate::AppState;
+use crate::{AppState, View};
 use dioxus::prelude::*;
 use rust_i18n::t;
 
@@ -16,11 +16,20 @@ pub fn Calculator(cx: Scope) -> Element {
                 ShutterSpeed {}
                 Filters {}
             }
-            section { class: "section", FinalExposure {} }
+            section { class: "section", FinalExposure {} },
+            section {
+                TimerButton {},
+            }
         }
     })
 }
 
+pub fn TimerButton(cx: Scope) -> Element {
+    let app_state = use_shared_state::<AppState>(cx).unwrap();
+    cx.render(rsx!(
+        button { onclick: move |_| { app_state.write().switch_view(View::Timer) }, "Timer" }
+    ))
+}
 pub fn ShutterSpeed(cx: Scope) -> Element {
     let app_state = use_shared_state::<AppState>(cx).unwrap();
     let shutter_speeds = ShutterSpeed::shutter_speed_array();

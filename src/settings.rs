@@ -1,5 +1,5 @@
 use crate::{
-    components::CustomFilter,
+    components::{BackButton, CustomFilter},
     languages::{self, Language},
     AppState,
 };
@@ -15,13 +15,6 @@ pub fn Settings(cx: Scope) -> Element {
             About {}
             BackButton {}
         }
-    ))
-}
-
-pub fn BackButton(cx: Scope) -> Element {
-    let app_state = use_shared_state::<AppState>(cx).unwrap();
-    cx.render(rsx!(
-        button { onclick: move |_| { app_state.write().toggle_view() }, t!("back") }
     ))
 }
 
