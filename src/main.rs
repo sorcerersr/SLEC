@@ -30,7 +30,7 @@ fn main() {
 enum View {
     Calculator,
     Settings,
-    Timer,
+    Timer(u64),
 }
 
 // struct representing a globale applocation wide state
@@ -96,7 +96,7 @@ fn GearLink(cx: Scope) -> Element {
     let new_view = match app_state.read().view {
         View::Calculator => View::Settings,
         View::Settings => View::Calculator,
-        View::Timer => View::Settings,
+        View::Timer(_) => View::Settings,
     };
     cx.render(rsx!(
         a { onclick: move |_| {
@@ -115,7 +115,9 @@ pub fn Main(cx: Scope) -> Element {
         (match app_state.read().view {
             View::Calculator => rsx!(Calculator {}),
             View::Settings => rsx!(Settings {}),
-            View::Timer => rsx!(Timer {}),
+            View::Timer(exposure_time) => rsx!(Timer {
+                exposure_in_millis: exposure_time
+            }),
         })
     ))
 }

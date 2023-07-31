@@ -2,10 +2,7 @@ use crate::{AppState, View};
 use dioxus::prelude::*;
 use rust_i18n::t;
 
-use humantime::format_duration;
-
-use std::time::Duration;
-
+use crate::components::Exposure;
 use crate::components::Slider;
 use crate::model::{Filter, ShutterSpeed};
 
@@ -16,18 +13,18 @@ pub fn Calculator(cx: Scope) -> Element {
                 ShutterSpeed {}
                 Filters {}
             }
-            section { class: "section", FinalExposure {} },
-            section {
-                TimerButton {},
-            }
+            section { class: "section", FinalExposure {} }
         }
     })
 }
 
-pub fn TimerButton(cx: Scope) -> Element {
+#[inline_props]
+pub fn TimerButton(cx: Scope, exposure_in_millis: u64) -> Element {
     let app_state = use_shared_state::<AppState>(cx).unwrap();
     cx.render(rsx!(
-        button { onclick: move |_| { app_state.write().switch_view(View::Timer) }, "Timer" }
+        button { onclick: move |_| { app_state.write().switch_view(View::Timer(*exposure_in_millis)) },
+            "Timer"
+        }
     ))
 }
 pub fn ShutterSpeed(cx: Scope) -> Element {
@@ -94,11 +91,10 @@ pub fn FinalExposure(cx: Scope) -> Element {
     } else {
         (exposure_time * 1000.0).trunc() as u64
     };
-    let duration = Duration::from_millis(exposure_time);
-    let formated_duration = format_duration(duration);
     cx.render(rsx! {
 
         div { t!("time_to_expose"), ": " }
-        div { h2 { "{formated_duration}" } }
+        div { Exposure { exposure_in_millis: exposure_time } }
+        div { TimerButton { exposure_in_millis: exposure_time } }
     })
 }
