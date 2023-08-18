@@ -23,7 +23,13 @@ fn FilterComponent(cx: Scope, filter: Filter) -> Element {
             div { "class": "grid",
                 label { "for": "display_name",
                     t!("filter.display_name"),
-                    input { value: &*filter.display_name, "type": "text", id: "display_name", name: "display_name", "required" }
+                    input {
+                        value: &*filter.display_name,
+                        "type": "text",
+                        id: "display_name",
+                        name: "display_name",
+                        "required"
+                    }
                 }
                 label { "for": "fstop_reduction",
                     t!("filter.fstop_reduction"),

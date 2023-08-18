@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-rust_i18n::i18n!("locales", fallback = "en");
+rust_i18n::i18n!( "locales", fallback = "en" );
 use dioxus::prelude::*;
 
 mod components;
@@ -99,9 +99,13 @@ fn GearLink(cx: Scope) -> Element {
         View::Timer(_) => View::Settings,
     };
     cx.render(rsx!(
-        a { onclick: move |_| {
+        a {
+            onclick: move |_| {
                 app_state.write().switch_view(new_view);
-            }, href: "#", "⚙️" }
+            },
+            href: "#",
+            "⚙️"
+        }
     ))
 }
 
