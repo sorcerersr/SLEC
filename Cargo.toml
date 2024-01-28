@@ -9,7 +9,7 @@ edition = "2021"
 dioxus = "0.4.0"
 dioxus-web = "0.4.0"
 gloo-console = "0.2.3"
-gloo-storage = "0.2.2"
+gloo-storage = "0.3.0"
 gloo-timers = {version="0.3.0", features = ["futures"]}
 humantime = "2.1.0"
 rust-i18n = "2.0.0"
