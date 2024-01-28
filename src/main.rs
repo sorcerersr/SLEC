@@ -112,9 +112,7 @@ fn GearLink(cx: Scope) -> Element {
 // The main component for the content
 pub fn Main(cx: Scope) -> Element {
     let app_state = use_shared_state::<AppState>(cx).unwrap();
-
     cx.render(rsx!(
-        #[allow(unused_parens)]
         // without those extra parens dioxus fmt will break the match statement
         (match app_state.read().view {
             View::Calculator => rsx!(Calculator {}),

@@ -21,3 +21,21 @@ that compiles to WASM (in this case Dioxus).
 ## Live
 
 [https://sorcerersr.github.io/](https://sorcerersr.github.io/)
+
+
+## Prerequisite
+
+At the time of writing follow https://dioxuslabs.com/learn/0.4/getting_started/wasm
+
+In short
+
+```
+cargo install dioxus-cli
+rustup target add wasm32-unknown-unknown
+```
+
+Running dev server:
+
+```
+dx serve
+```
