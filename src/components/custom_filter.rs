@@ -15,7 +15,7 @@ pub fn CustomFilter(cx: Scope) -> Element {
     ))
 }
 
-#[inline_props]
+#[component]
 fn FilterComponent(cx: Scope, filter: Filter) -> Element {
     let _app_state = use_shared_state::<AppState>(cx).unwrap();
     cx.render(rsx!(

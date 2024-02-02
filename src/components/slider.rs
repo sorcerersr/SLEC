@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use rust_i18n::t;
 
-#[inline_props]
+#[component]
 pub fn Slider<'a>(
     cx: Scope<'a>,
     min: usize,

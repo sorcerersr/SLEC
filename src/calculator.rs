@@ -18,7 +18,7 @@ pub fn Calculator(cx: Scope) -> Element {
     })
 }
 
-#[inline_props]
+#[component]
 pub fn TimerButton(cx: Scope, exposure_in_millis: u64) -> Element {
     let app_state = use_shared_state::<AppState>(cx).unwrap();
     cx.render(rsx!(

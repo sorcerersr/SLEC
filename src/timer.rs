@@ -3,7 +3,7 @@ use gloo_timers::future::TimeoutFuture;
 
 use crate::components::{BackButton, Exposure};
 
-#[inline_props]
+#[component]
 pub fn Timer(cx: Scope, exposure_in_millis: u64) -> Element {
     let curexp = use_state(cx, || *exposure_in_millis);
     let is_running = use_state(cx, || false);
