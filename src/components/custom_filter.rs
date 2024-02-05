@@ -6,12 +6,32 @@ pub fn CustomFilter(cx: Scope) -> Element {
     let _app_state = use_shared_state::<AppState>(cx).unwrap();
     let filters = use_ref(cx, || Filter::filter_list());
     cx.render(rsx!(
-        article {
-            h3 { t!("custom_filter") }
-            for filter in &*filters.read() {
-                FilterComponent { key: "{filter.id}", filter: filter.clone() }
-            }
-        }
+    article {
+        h3 { t!("custom_filter") }
+
+            button { onclick: move |_| {
+                        let mut default_filters = Filter::default_filter_list();
+                        Filter::store_filter_list(&default_filters);
+                        filters.write().clear();
+                        filters.write().append(&mut default_filters);
+                    },
+                    t!("filter.reset")
+                    }
+        (0..(&*filters.read()).len()).map(|index| {
+            let filter = (&*filters.read()).get(index).unwrap().clone();
+            rsx!(
+                FilterComponent { filter: filter }
+                rsx!(div { "align": "right",
+                    button { onclick: move |_| {
+                        filters.write().remove(index);
+                        Filter::store_filter_list(&filters.read());
+
+                    },
+                    t!("filter.delete")
+                    }
+                })
+            )}
+        )}
     ))
 }
 
@@ -50,9 +70,7 @@ fn FilterComponent(cx: Scope, filter: Filter) -> Element {
                     }
                 }
             }
-            div { "align": "right",
-                a { "href": "#", role: "button", t!("filter.delete") }
-            }
+
         }
     ))
 }

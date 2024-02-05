@@ -11,3 +11,4 @@ filter.fstop_reduction: Blendstufen Reduzierung
 filter.display_name: Anzeigename
 filter.calculation_note: für die Berechnung verwendet
 filter.delete: 🗑 löschen
+filter.reset: Wiederherstellen
