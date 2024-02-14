@@ -76,27 +76,35 @@ impl ShutterSpeed {
     }
 }
 
-#[derive(PartialEq, Clone, Serialize, Deserialize)]
-pub struct Filter {
-    pub factor: u64,
-    pub fstop_reduction: f64,
-    pub display_name: String,
-    pub selected: bool,
-    pub id: usize,
+
+pub enum FiltersAction {
+    Remove(u8),
 }
 
-impl Filter {
-    pub fn filter_list() -> Vec<Filter> {
+
+#[derive(PartialEq, Clone, Serialize, Deserialize)]
+pub struct Filters {
+    pub list: Vec<Filter>,
+}
+
+impl Filters {
+    pub fn new() -> Filters {
+        Filters {
+            list: Filters::filter_list(),
+        }
+    }
+
+    fn filter_list() -> Vec<Filter> {
         if let Ok(filters_json) = LocalStorage::get::<String>("filters") {
             if let Ok(filters) = serde_json::from_str(&filters_json) {
                 filters
             } else {
                 log!("failed to load filter list from LocalStorage! Using default filters");
-                Filter::default_filter_list()
+                Filters::default_filter_list()
             }
         } else {
-            let filters = Filter::default_filter_list();
-            Filter::store_filter_list(&filters);
+            let filters = Filters::default_filter_list();
+            Filters::store_filter_list(&filters);
             filters
         }
     }
@@ -122,7 +130,7 @@ impl Filter {
         }
     }
 
-    pub fn default_filter_list() -> Vec<Filter> {
+    fn default_filter_list() -> Vec<Filter> {
         let filters = vec![
             Filter {
                 factor: 8,
@@ -149,6 +157,46 @@ impl Filter {
         filters
     }
 
+    pub fn reset(&mut self) {
+        let mut default_filters = Filters::default_filter_list();
+        Filters::store_filter_list(&default_filters);
+        self.list.clear();
+        self.list.append(&mut default_filters);
+    }
+
+    pub fn getById(&self, id: u8) -> Option<&Filter>{
+        if let Some(index) = self.list.iter().position(|item| item.id == id) {
+            Some(&self.list.get(index).unwrap())
+        } else {
+            None
+        }
+    }
+
+
+    pub fn reduce(&mut self, action: FiltersAction){
+        match action {
+            FiltersAction::Remove(filter_id) => self.removeById(filter_id),
+        }
+    }
+
+    fn removeById(&mut self, filter_id: u8) {
+        if let Some(index) = self.list.iter().position(|item| item.id == filter_id) {
+            self.list.remove(index);
+            Filters::store_filter_list(&self.list);
+        }
+    }
+}
+
+#[derive(PartialEq, Clone, Serialize, Deserialize)]
+pub struct Filter {
+    pub factor: u64,
+    pub fstop_reduction: f64,
+    pub display_name: String,
+    pub selected: bool,
+    pub id: u8,
+}
+
+impl Filter {
     pub fn set_selected(&mut self, selected: bool) {
         self.selected = selected;
     }

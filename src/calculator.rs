@@ -1,10 +1,11 @@
+use crate::model::Filters;
 use crate::{AppState, View};
 use dioxus::prelude::*;
 use rust_i18n::t;
 
 use crate::components::Exposure;
 use crate::components::Slider;
-use crate::model::{Filter, ShutterSpeed};
+use crate::model::ShutterSpeed;
 
 pub fn Calculator(cx: Scope) -> Element {
     cx.render(rsx! {
@@ -50,10 +51,11 @@ pub fn ShutterSpeed(cx: Scope) -> Element {
 }
 
 pub fn Filters(cx: Scope) -> Element {
-    let filters = use_ref(cx, || Filter::filter_list());
+    let filters = use_ref(cx, || Filters::new());
     let app_state = use_shared_state::<AppState>(cx).unwrap();
     let fstop_reduction = filters
         .read()
+        .list
         .iter()
         .filter(|filter| filter.selected)
         .map(|filter| filter.fstop_reduction)
@@ -65,14 +67,14 @@ pub fn Filters(cx: Scope) -> Element {
 
     cx.render(rsx! {
         div { class: "grid",
-            (0..filters.read().len()).map(|index| rsx!(
+            (0..filters.read().list.len()).map(|index| rsx!(
                 div{ margin:"10px 0px",
                     input {
                         oninput: move |event|
-                            filters.write().get_mut(index).unwrap().set_selected(event.value == "true"),
+                            filters.write().list.get_mut(index).unwrap().set_selected(event.value == "true"),
                         "type":"checkbox", id:"filter_switch", name:"filter_switch", role:"switch"
                     },
-                    filters.read().get(index).unwrap().display_name.clone(),
+                    filters.read().list.get(index).unwrap().display_name.clone(),
                 }
             ))
         }
