@@ -1,28 +1,32 @@
-use crate::{model::Filter, AppState};
+use crate::model::Filter;
 use dioxus::prelude::*;
 use rust_i18n::t;
 
-pub fn CustomFilter(cx: Scope) -> Element {
-    let _app_state = use_shared_state::<AppState>(cx).unwrap();
-    let filters = use_ref(cx, || Filter::filter_list());
-    cx.render(rsx!(
+#[component]
+pub fn CustomFilter() -> Element {
+    let filters = use_signal(|| Filter::filter_list());
+    let custom_filter = t!("custom_filter");
+    rsx!(
         article {
-            h3 { t!("custom_filter") }
-            for filter in &*filters.read() {
+            h3 { "{custom_filter}" }
+            for filter in filters.read().iter() {
                 FilterComponent { key: "{filter.id}", filter: filter.clone() }
             }
         }
-    ))
+    )
 }
 
-#[inline_props]
-fn FilterComponent(cx: Scope, filter: Filter) -> Element {
-    let _app_state = use_shared_state::<AppState>(cx).unwrap();
-    cx.render(rsx!(
+#[component]
+fn FilterComponent(filter: Filter) -> Element {
+    let display_name = t!("filter.display_name");
+    let fstop_reduction = t!("filter.fstop_reduction");
+    let factor = t!("filter.factor");
+    let delete = t!("filter.delete");
+    rsx!(
         article {
             div { "class": "grid",
                 label { "for": "display_name",
-                    t!("filter.display_name"),
+                    "{display_name}",
                     input {
                         value: &*filter.display_name,
                         "type": "text",
@@ -32,7 +36,7 @@ fn FilterComponent(cx: Scope, filter: Filter) -> Element {
                     }
                 }
                 label { "for": "fstop_reduction",
-                    t!("filter.fstop_reduction"),
+                    "{fstop_reduction}",
                     input {
                         value: "{filter.fstop_reduction}",
                         "type": "number",
@@ -41,7 +45,7 @@ fn FilterComponent(cx: Scope, filter: Filter) -> Element {
                     }
                 }
                 label { "for": "factor",
-                    t!("filter.factor"),
+                    "{factor}",
                     input {
                         value: "{filter.factor}",
                         "type": "number",
@@ -51,8 +55,8 @@ fn FilterComponent(cx: Scope, filter: Filter) -> Element {
                 }
             }
             div { "align": "right",
-                a { "href": "#", role: "button", t!("filter.delete") }
+                a { "href": "#", role: "button", "{delete}" }
             }
         }
-    ))
+    )
 }
