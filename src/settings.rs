@@ -1,13 +1,16 @@
+use std::env;
+
 use crate::{
     components::{BackButton, CustomFilter},
     languages::{self, Language},
-    AppState,
+    APP_STATE,
 };
 use dioxus::prelude::*;
 use rust_i18n::t;
 
-pub fn Settings(cx: Scope) -> Element {
-    cx.render(rsx!(
+#[component]
+pub fn Settings() -> Element {
+    rsx!(
         main { class: "container",
             BackButton {}
             LanguageSelection {}
@@ -15,14 +18,15 @@ pub fn Settings(cx: Scope) -> Element {
             About {}
             BackButton {}
         }
-    ))
+    )
 }
 
-pub fn LanguageSelection(cx: Scope) -> Element {
-    let app_state = use_shared_state::<AppState>(cx).unwrap();
-    cx.render(rsx!(
+#[component]
+pub fn LanguageSelection() -> Element {
+    let lang = t!("language");
+    rsx!(
         article {
-            h3 { t!("language") }
+            h3 { "{lang}" }
             fieldset {
                 section {
                     label { "for": "english",
@@ -31,9 +35,9 @@ pub fn LanguageSelection(cx: Scope) -> Element {
                             aria_placeholder: "english",
                             name: "language",
                             value: "english",
-                            checked: app_state.read().language == Language::English,
+                            checked: APP_STATE.read().language == Language::English,
                             oninput: move |_| {
-                                app_state.write().language = Language::English;
+                                APP_STATE.write().language = Language::English;
                                 languages::set_language(Language::English);
                             }
                         }
@@ -45,9 +49,9 @@ pub fn LanguageSelection(cx: Scope) -> Element {
                             id: "german",
                             name: "language",
                             value: "german",
-                            checked: app_state.read().language == Language::German,
+                            checked: APP_STATE.read().language == Language::German,
                             oninput: move |_| {
-                                app_state.write().language = Language::German;
+                                APP_STATE.write().language = Language::German;
                                 languages::set_language(Language::German);
                             }
                         }
@@ -56,17 +60,19 @@ pub fn LanguageSelection(cx: Scope) -> Element {
                 }
             }
         }
-    ))
+    )
 }
 
-pub fn About(cx: Scope) -> Element {
+#[component]
+pub fn About() -> Element {
     // app_state only used here for triggering an rerender when language settings are changed
-    let _app_state = use_shared_state::<AppState>(cx).unwrap();
-    cx.render(rsx!(
+    let about = t!("about");
+    let version = env::var("CARGO_PKG_VERSION").unwrap_or_else(|_| "?.?.?".to_string());
+    rsx!(
         article {
-            h3 { t!("about") }
-            div { "SLEC - Sorcerers Long Exposure Calculator ", env!("CARGO_PKG_VERSION") }
+            h3 { "{about}" }
+            div { "SLEC - Sorcerers Long Exposure Calculator - {version}" }
             div { a { href: "https://github.com/sorcerersr/SLEC", "https://github.com/sorcerersr/SLEC" } }
         }
-    ))
+    )
 }

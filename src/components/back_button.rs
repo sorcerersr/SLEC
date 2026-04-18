@@ -1,12 +1,13 @@
 use dioxus::prelude::*;
 use rust_i18n::t;
 
-use crate::AppState;
-pub fn BackButton(cx: Scope) -> Element {
-    let app_state = use_shared_state::<AppState>(cx).unwrap();
-    cx.render(rsx!(
-        button { onclick: move |_| { app_state.write().switch_view(crate::View::Calculator) },
-            t!("back")
-        }
-    ))
+use crate::APP_STATE;
+
+#[component]
+pub fn BackButton() -> Element {
+    let back = t!("back");
+    rsx!(button {
+        onclick: move |_| { APP_STATE.write().switch_view(crate::View::Calculator) },
+        "{back}"
+    })
 }

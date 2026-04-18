@@ -1,6 +1,8 @@
 #![allow(non_snake_case)]
 
-rust_i18n::i18n!( "locales", fallback = "en" );
+rust_i18n::i18n!("locales", fallback = "en");
+use std::env;
+
 use dioxus::prelude::*;
 
 mod components;
@@ -22,7 +24,7 @@ use settings::Settings;
 // Entrypoint of the application
 fn main() {
     // launch the web app
-    dioxus_web::launch(app);
+    launch(app);
 }
 
 // Enumeration to define the navigatable views
@@ -48,35 +50,33 @@ impl AppState {
     }
 }
 
-fn app(cx: Scope) -> Element {
-    // init i18n before doing anything else
-    let language = languages::init();
+// init application wide state
+static APP_STATE: GlobalSignal<AppState> = Signal::global(|| AppState {
+    language: languages::init(),
+    shutter_speed: 1.0 / 15.0,
+    total_fstop_reduction: 0.0,
+    view: View::Calculator,
+});
 
-    // init application wide state
-    use_shared_state_provider(cx, || AppState {
-        language,
-        shutter_speed: 1.0 / 15.0,
-        total_fstop_reduction: 0.0,
-        view: View::Calculator,
-    });
-
-    cx.render(rsx! {
-
+#[component]
+fn app() -> Element {
+    rsx! {
         Header {}
         Main {}
-    })
+    }
 }
 
 // Header-Bar Component
 // Visible for both views (calculator and settings)
-pub fn Header(cx: Scope) -> Element {
-    cx.render(rsx! {
+pub fn Header() -> Element {
+    let version = env::var("CARGO_PKG_VERSION").unwrap_or_else(|_| "?.?.?".to_string());
+    rsx! {
         header { class: "container",
             nav {
                 ul {
                     li {
                         strong { "📷 SLEC  " }
-                        small { env!("CARGO_PKG_VERSION") }
+                        small { "{version}" }
                     }
                 }
                 ul {
@@ -87,39 +87,42 @@ pub fn Header(cx: Scope) -> Element {
                 }
             }
         }
-    })
+    }
 }
 
 // a clickable gear-icon to show/hide the settings view
-fn GearLink(cx: Scope) -> Element {
-    let app_state = use_shared_state::<AppState>(cx).unwrap();
-    let new_view = match app_state.read().view {
+#[component]
+fn GearLink() -> Element {
+    let new_view = match APP_STATE.read().view {
         View::Calculator => View::Settings,
         View::Settings => View::Calculator,
         View::Timer(_) => View::Settings,
     };
-    cx.render(rsx!(
+    rsx!(
         a {
             onclick: move |_| {
-                app_state.write().switch_view(new_view);
+                APP_STATE.write().switch_view(new_view);
             },
             href: "#",
             "⚙️"
         }
-    ))
+    )
 }
 
 // The main component for the content
-pub fn Main(cx: Scope) -> Element {
-    let app_state = use_shared_state::<AppState>(cx).unwrap();
-    cx.render(rsx!(
+#[component]
+pub fn Main() -> Element {
+    rsx!(
+        Stylesheet { href: asset!("../assets/pico.min.css") }
         // without those extra parens dioxus fmt will break the match statement
-        (match app_state.read().view {
-            View::Calculator => rsx!(Calculator {}),
-            View::Settings => rsx!(Settings {}),
-            View::Timer(exposure_time) => rsx!(Timer {
-                exposure_in_millis: exposure_time
-            }),
-        })
-    ))
+        {
+            match APP_STATE.read().view {
+                View::Calculator => rsx!(Calculator {}),
+                View::Settings => rsx!(Settings {}),
+                View::Timer(exposure_time) => rsx!(Timer {
+                    exposure_in_millis: exposure_time
+                }),
+            }
+        }
+    )
 }

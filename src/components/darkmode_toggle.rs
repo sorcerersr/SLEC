@@ -50,13 +50,14 @@ impl From<bool> for Theme {
     }
 }
 
-pub fn DarkModeToggle(cx: Scope) -> Element {
+#[component]
+pub fn DarkModeToggle() -> Element {
     let theme = Theme::from(isDarkModePrefered());
-    cx.render(rsx! {
+    rsx! {
         "🌞"
         input {
             oninput: move |event| {
-                setDarkModePreference(&Theme::from(event.value == "true").html_value());
+                setDarkModePreference(&Theme::from(event.value() == "true").html_value());
             },
             checked: "{theme.is_darkmode_checked()}",
             r#type: "checkbox",
@@ -65,5 +66,5 @@ pub fn DarkModeToggle(cx: Scope) -> Element {
             role: "switch"
         }
         "🌘"
-    })
+    }
 }

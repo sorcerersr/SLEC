@@ -25,22 +25,3 @@ reload_html = true
 
 # which files or dirs will be watcher monitoring
 watch_path = ["src", "assets"]
-
-# include `assets` in web platform
-[web.resource]
-
-# CSS style file
-style = ["pico.min.css"]
-
-# Javascript code file
-script = []
-
-[web.resource.dev]
-
-# serve: [dev-server] only
-
-# CSS style file
-style = []
-
-# Javascript code file
-script = []
