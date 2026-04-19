@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
 rust_i18n::i18n!("locales", fallback = "en");
-use std::env;
 
 use dioxus::prelude::*;
 
@@ -69,7 +68,7 @@ fn app() -> Element {
 // Header-Bar Component
 // Visible for both views (calculator and settings)
 pub fn Header() -> Element {
-    let version = env::var("CARGO_PKG_VERSION").unwrap_or_else(|_| "?.?.?".to_string());
+    let version = option_env!("CARGO_PKG_VERSION").unwrap_or("?.?.?");
     rsx! {
         header { class: "container",
             nav {

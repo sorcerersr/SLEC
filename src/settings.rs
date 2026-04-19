@@ -1,9 +1,7 @@
-use std::env;
-
 use crate::{
+    APP_STATE,
     components::{BackButton, CustomFilter},
     languages::{self, Language},
-    APP_STATE,
 };
 use dioxus::prelude::*;
 use rust_i18n::t;
@@ -67,7 +65,7 @@ pub fn LanguageSelection() -> Element {
 pub fn About() -> Element {
     // app_state only used here for triggering an rerender when language settings are changed
     let about = t!("about");
-    let version = env::var("CARGO_PKG_VERSION").unwrap_or_else(|_| "?.?.?".to_string());
+    let version = option_env!("CARGO_PKG_VERSION").unwrap_or("?.?.?");
     rsx!(
         article {
             h3 { "{about}" }
