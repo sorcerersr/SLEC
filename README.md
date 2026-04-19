@@ -20,22 +20,26 @@ that compiles to WASM (in this case Dioxus).
 
 ## Live
 
-[https://sorcerersr.github.io/](https://sorcerersr.github.io/)
+[https://sorcerersr.github.io/SLEC/](https://sorcerersr.github.io/SLEC/)
 
 
 ## Prerequisite
 
-At the time of writing follow https://dioxuslabs.com/learn/0.4/getting_started/wasm
-
+At the time of writing follow https://dioxuslabs.com/learn/0.7/getting_started/
 In short
 
 ```
-cargo install dioxus-cli
+rustup toolchain install stable
 rustup target add wasm32-unknown-unknown
+```
+
+and install dioxus-cli (check the dioxus docs for more installation options)
+```
+curl -sSL https://dioxus.dev/install.sh | bash
 ```
 
 Running dev server:
 
 ```
-dx serve
+dx serve --platform web
 ```
