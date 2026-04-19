@@ -42,11 +42,7 @@ impl Theme {
 
 impl From<bool> for Theme {
     fn from(value: bool) -> Self {
-        if value {
-            Theme::Dark
-        } else {
-            Theme::Light
-        }
+        if value { Theme::Dark } else { Theme::Light }
     }
 }
 
