@@ -242,21 +242,21 @@ mod tests {
         assert_eq!(filters[0].factor, 8);
         assert_eq!(filters[0].fstop_reduction, 3.0);
         assert_eq!(filters[0].display_name, "ND8");
-        assert_eq!(filters[0].selected, false);
+        assert!(!filters[0].selected);
         assert_eq!(filters[0].id, 0);
 
         // Check second filter
         assert_eq!(filters[1].factor, 64);
         assert_eq!(filters[1].fstop_reduction, 6.0);
         assert_eq!(filters[1].display_name, "ND64");
-        assert_eq!(filters[1].selected, false);
+        assert!(!filters[1].selected);
         assert_eq!(filters[1].id, 1);
 
         // Check third filter
         assert_eq!(filters[2].factor, 1024);
         assert_eq!(filters[2].fstop_reduction, 10.0);
         assert_eq!(filters[2].display_name, "ND1000");
-        assert_eq!(filters[2].selected, false);
+        assert!(!filters[2].selected);
         assert_eq!(filters[2].id, 3);
     }
 }
