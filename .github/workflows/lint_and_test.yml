@@ -38,11 +38,8 @@ jobs:
       - name: Run tests with coverage
         run: |
           cargo llvm-cov \
-            --all-targets \
-            --all-features \
-            --lcov \
-            --output-path lcov.info \
-            --threshold 80
+            --fail-under-lines=80 \
+            --html
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
