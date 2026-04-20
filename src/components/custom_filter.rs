@@ -4,7 +4,7 @@ use rust_i18n::t;
 
 #[component]
 pub fn CustomFilter() -> Element {
-    let filters = use_signal(|| Filter::filter_list());
+    let filters = use_signal(Filter::filter_list);
     let custom_filter = t!("custom_filter");
     rsx!(
         article {
