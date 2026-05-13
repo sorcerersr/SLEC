@@ -1,7 +1,5 @@
 use dioxus::prelude::*;
 use gloo_timers::future::TimeoutFuture;
-use js_sys::Function;
-use wasm_bindgen::{JsCast, JsValue};
 use web_sys::{AudioContext, OscillatorType};
 
 use crate::components::{BackButton, Exposure};
@@ -32,14 +30,7 @@ fn play_completion_sound() {
         let _ = frequency.set_value_at_time(440.0, start_time + offset);
 
         let destination = audio_ctx.destination();
-        // Use js_sys::Function::call1 to connect (bypasses web-sys feature gate on AudioNode::connect)
-        let this_val: JsValue = oscillator.clone().into();
-        let dest_val: JsValue = destination.clone().into();
-        let connect_method: Function =
-            js_sys::Reflect::get(&this_val, &JsValue::from_str("connect"))
-                .expect("get connect method")
-                .unchecked_into();
-        let _ = connect_method.call1(&this_val, &dest_val);
+        let _ = oscillator.connect_with_audio_node(&destination);
         let _ = oscillator.start_with_when(start_time + offset);
         let _ = oscillator.stop_with_when(start_time + offset + beep_duration);
     }
