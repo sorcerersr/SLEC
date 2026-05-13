@@ -164,7 +164,12 @@ impl Filter {
     }
 
     pub fn next_id(filters: &[Filter]) -> usize {
-        filters.iter().map(|f| f.id).max().map(|m| m + 1).unwrap_or(0)
+        filters
+            .iter()
+            .map(|f| f.id)
+            .max()
+            .map(|m| m + 1)
+            .unwrap_or(0)
     }
 
     pub fn reset_to_defaults() -> Vec<Filter> {

@@ -38,7 +38,7 @@ pub fn CustomFilter() -> Element {
                 FilterComponent {
                     key: "{f.id}",
                     filter: f.clone(),
-                    on_remove: remove_callback.clone()
+                    on_remove: remove_callback
                 }
             }
             button { onclick: add_filter_handler, "{add_filter}" }
