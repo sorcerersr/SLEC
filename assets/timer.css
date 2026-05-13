@@ -1,29 +1,102 @@
 @keyframes donePulse {
-    0%   { background-color: transparent; }
-    15%  { background-color: #d4edda; }
-    30%  { background-color: transparent; }
-    45%  { background-color: #d4edda; }
-    60%  { background-color: transparent; }
-    75%  { background-color: #d4edda; }
-    100% { background-color: transparent; }
+	0% {
+		background-color: transparent;
+	}
+	15% {
+		background-color: #d4edda;
+	}
+	30% {
+		background-color: transparent;
+	}
+	45% {
+		background-color: #d4edda;
+	}
+	60% {
+		background-color: transparent;
+	}
+	75% {
+		background-color: #d4edda;
+	}
+	100% {
+		background-color: transparent;
+	}
+}
+
+@keyframes doneBorderScale {
+	0% {
+		border-color: transparent;
+		transform: scale(1);
+	}
+	15% {
+		border-color: #198754;
+		transform: scale(1.05);
+	}
+	30% {
+		border-color: transparent;
+		transform: scale(1);
+	}
+	45% {
+		border-color: #198754;
+		transform: scale(1.05);
+	}
+	60% {
+		border-color: transparent;
+		transform: scale(1);
+	}
+	75% {
+		border-color: #198754;
+		transform: scale(1.05);
+	}
+	100% {
+		border-color: transparent;
+		transform: scale(1);
+	}
 }
 
 .done-flash {
-    animation: donePulse 0.9s ease-in-out;
-    text-align: center;
-    padding: 2rem;
+	animation: donePulse 0.9s ease-in-out, doneBorderScale 0.9s ease-in-out;
+	border: 3px solid transparent;
+	border-radius: 0.5rem;
+	text-align: center;
+	padding: 2rem;
+}
+
+@media (prefers-color-scheme: light) {
+	@keyframes donePulse {
+		0% {
+			background-color: transparent;
+		}
+		15% {
+			background-color: #a3d9a5;
+		}
+		30% {
+			background-color: transparent;
+		}
+		45% {
+			background-color: #a3d9a5;
+		}
+		60% {
+			background-color: transparent;
+		}
+		75% {
+			background-color: #a3d9a5;
+		}
+		100% {
+			background-color: transparent;
+		}
+	}
 }
 
 .done-flash h2 {
-    color: #198754;
-    font-size: 2rem;
-    margin: 0.5rem 0;
+	color: #198754;
+	font-size: 2rem;
+	margin: 0.5rem 0;
 }
 
 .done-flash .checkmark {
-    font-size: 4rem;
+	font-size: 4rem;
 }
 
 .timer-center {
-    text-align: center;
+	text-align: center;
 }
