@@ -6,31 +6,6 @@ use web_sys::{AudioContext, OscillatorType};
 
 use crate::components::{BackButton, Exposure};
 
-const DONE_CSS: &str = r#"
-@keyframes donePulse {
-    0%   { background-color: transparent; }
-    15%  { background-color: #d4edda; }
-    30%  { background-color: transparent; }
-    45%  { background-color: #d4edda; }
-    60%  { background-color: transparent; }
-    75%  { background-color: #d4edda; }
-    100% { background-color: transparent; }
-}
-.done-flash {
-    animation: donePulse 0.9s ease-in-out;
-    text-align: center;
-    padding: 2rem;
-}
-.done-flash h2 {
-    color: #198754;
-    font-size: 2rem;
-    margin: 0.5rem 0;
-}
-.done-flash .checkmark {
-    font-size: 4rem;
-}
-"#;
-
 /// Play a triple-beep completion sound using the Web Audio API.
 /// Schedules all three beeps upfront for precise timing.
 /// Fires and forgets — visual feedback works independently if this fails.
@@ -108,7 +83,7 @@ pub fn Timer(exposure_in_millis: u64) -> Element {
     let done_text = rust_i18n::t!("timer.done");
 
     rsx!(
-        style { "{DONE_CSS}" }
+        Stylesheet { href: asset!("../assets/timer.css") }
 
         main { class: "container",
             BackButton {}
