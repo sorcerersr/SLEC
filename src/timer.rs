@@ -83,7 +83,6 @@ pub fn Timer(exposure_in_millis: u64) -> Element {
                 div { class: "done-flash",
                     div { class: "checkmark", "✅" }
                     h2 { "{done_text}" }
-                    BackButton {}
                 }
             } else if is_running() {
                 div { class: "timer-center",
