@@ -86,11 +86,15 @@ pub fn Timer(exposure_in_millis: u64) -> Element {
                     BackButton {}
                 }
             } else if is_running() {
-                Exposure { exposure_in_millis: curexp() }
+                div { class: "timer-center",
+                    Exposure { exposure_in_millis: curexp() }
+                }
             } else {
-                Exposure { exposure_in_millis: curexp() }
-                section {
-                    button { class: "outline", onclick: countdown, "Start" }
+                div { class: "timer-center",
+                    Exposure { exposure_in_millis: curexp() }
+                    section {
+                        button { class: "outline", onclick: countdown, "Start" }
+                    }
                 }
             }
 
