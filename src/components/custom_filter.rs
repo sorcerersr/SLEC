@@ -4,20 +4,51 @@ use rust_i18n::t;
 
 #[component]
 pub fn CustomFilter() -> Element {
-    let filters = use_signal(Filter::filter_list);
+    let mut filters = use_signal(Filter::filter_list);
     let custom_filter = t!("custom_filter");
+    let add_filter = t!("filter.add");
+    let reset_to_defaults = t!("filter.reset");
+
+    let add_filter_handler = move |_| {
+        let mut sig = filters.write();
+        let id = Filter::next_id(&sig);
+        let mut new_filter = Filter::new_custom(1, 0.0, "Custom".to_owned());
+        new_filter.id = id;
+        sig.push(new_filter);
+        Filter::store_filter_list(&sig);
+    };
+
+    let reset_handler = move |_| {
+        let defaults = Filter::reset_to_defaults();
+        let mut sig = filters.write();
+        *sig = defaults;
+        Filter::store_filter_list(&sig);
+    };
+
+    let remove_callback = use_callback(move |id: usize| {
+        let mut sig = filters.write();
+        Filter::remove_filter(&mut sig, id);
+        Filter::store_filter_list(&sig);
+    });
+
     rsx!(
         article {
             h3 { "{custom_filter}" }
-            for filter in filters.read().iter() {
-                FilterComponent { key: "{filter.id}", filter: filter.clone() }
+            for f in filters.read().iter() {
+                FilterComponent {
+                    key: "{f.id}",
+                    filter: f.clone(),
+                    on_remove: remove_callback
+                }
             }
+            button { onclick: add_filter_handler, "{add_filter}" }
+            button { onclick: reset_handler, "{reset_to_defaults}" }
         }
     )
 }
 
 #[component]
-fn FilterComponent(filter: Filter) -> Element {
+fn FilterComponent(filter: Filter, on_remove: Callback<usize>) -> Element {
     let display_name = t!("filter.display_name");
     let fstop_reduction = t!("filter.fstop_reduction");
     let factor = t!("filter.factor");
@@ -55,7 +86,7 @@ fn FilterComponent(filter: Filter) -> Element {
                 }
             }
             div { "align": "right",
-                a { "href": "#", role: "button", "{delete}" }
+                a { "href": "#", role: "button", onclick: move |e| { e.prevent_default(); on_remove.call(filter.id); }, "{delete}" }
             }
         }
     )

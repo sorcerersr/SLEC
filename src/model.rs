@@ -143,7 +143,7 @@ impl Filter {
                 fstop_reduction: 10.0,
                 display_name: "ND1000".to_owned(),
                 selected: false,
-                id: 3,
+                id: 2,
             },
         ];
         filters
@@ -151,6 +151,33 @@ impl Filter {
 
     pub fn set_selected(&mut self, selected: bool) {
         self.selected = selected;
+    }
+
+    pub fn new_custom(factor: u64, fstop: f64, name: String) -> Filter {
+        Filter {
+            factor,
+            fstop_reduction: fstop,
+            display_name: name,
+            selected: false,
+            id: 0, // will be set by next_id when adding to a list
+        }
+    }
+
+    pub fn next_id(filters: &[Filter]) -> usize {
+        filters
+            .iter()
+            .map(|f| f.id)
+            .max()
+            .map(|m| m + 1)
+            .unwrap_or(0)
+    }
+
+    pub fn reset_to_defaults() -> Vec<Filter> {
+        Filter::default_filter_list()
+    }
+
+    pub fn remove_filter(filters: &mut Vec<Filter>, id: usize) {
+        filters.retain(|f| f.id != id);
     }
 }
 
@@ -257,6 +284,6 @@ mod tests {
         assert_eq!(filters[2].fstop_reduction, 10.0);
         assert_eq!(filters[2].display_name, "ND1000");
         assert!(!filters[2].selected);
-        assert_eq!(filters[2].id, 3);
+        assert_eq!(filters[2].id, 2);
     }
 }
