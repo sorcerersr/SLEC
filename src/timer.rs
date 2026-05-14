@@ -4,15 +4,6 @@ use gloo_timers::future::TimeoutFuture;
 use crate::audio::{init_audio, play_completion_sound, play_tick_beep};
 use crate::components::{BackButton, Exposure};
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_timer_component_structure() {
-        let exposure_time: u64 = 5000; // 5 seconds
-        assert_eq!(exposure_time, 5000);
-    }
-}
-
 #[component]
 pub fn Timer(exposure_in_millis: u64) -> Element {
     let mut curexp = use_signal(|| exposure_in_millis);
@@ -76,4 +67,13 @@ pub fn Timer(exposure_in_millis: u64) -> Element {
             BackButton {}
         }
     )
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_timer_component_structure() {
+        let exposure_time: u64 = 5000; // 5 seconds
+        assert_eq!(exposure_time, 5000);
+    }
 }
