@@ -11,4 +11,6 @@ filter.fstop_reduction: F-Stop Reduction
 filter.display_name: Display Name
 filter.calculation_note: used for calculation
 filter.delete: 🗑 delete
+filter.add: Add Filter
+filter.reset: Reset Filters to Defaults
 timer.done: Done!
