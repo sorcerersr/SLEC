@@ -8,6 +8,8 @@ mod components;
 mod model;
 use components::DarkModeToggle;
 
+mod audio;
+
 mod timer;
 use timer::Timer;
 
