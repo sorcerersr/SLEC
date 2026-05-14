@@ -1,0 +1,25 @@
+{
+  "name": "SLEC - Sorcerers Long Exposure Calculator",
+  "short_name": "SLEC",
+  "description": "Calculate shutter time for long exposures with ND filters",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "display_override": ["window-control-overlay", "standalone"],
+  "theme_color": "#0f94c1",
+  "background_color": "#0f94c1",
+  "orientation": "any",
+  "lang": "en"
+}
