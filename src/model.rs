@@ -286,4 +286,54 @@ mod tests {
         assert!(!filters[2].selected);
         assert_eq!(filters[2].id, 2);
     }
+
+    #[test]
+    fn test_next_id_empty() {
+        assert_eq!(Filter::next_id(&[]), 0);
+    }
+
+    #[test]
+    fn test_next_id_with_filters() {
+        let filters = Filter::default_filter_list();
+        // Default list has ids 0, 1, 2 → next id is 3
+        assert_eq!(Filter::next_id(&filters), 3);
+    }
+
+    #[test]
+    fn test_remove_existing_filter() {
+        let mut filters = Filter::default_filter_list();
+        assert_eq!(filters.len(), 3);
+        Filter::remove_filter(&mut filters, 0); // remove ND8
+        assert_eq!(filters.len(), 2);
+        assert!(filters.iter().all(|f| f.id != 0));
+    }
+
+    #[test]
+    fn test_remove_nonexistent_filter() {
+        let mut filters = Filter::default_filter_list();
+        Filter::remove_filter(&mut filters, 99);
+        assert_eq!(filters.len(), 3);
+    }
+
+    #[test]
+    fn test_reset_to_defaults() {
+        let defaults = Filter::default_filter_list();
+        let reset = Filter::reset_to_defaults();
+        assert_eq!(reset.len(), defaults.len());
+        for (a, b) in defaults.iter().zip(reset.iter()) {
+            assert_eq!(a.factor, b.factor);
+            assert_eq!(a.fstop_reduction, b.fstop_reduction);
+            assert_eq!(a.display_name, b.display_name);
+        }
+    }
+
+    #[test]
+    fn test_new_custom_filter() {
+        let filter = Filter::new_custom(256, 8.0, "ND256".to_owned());
+        assert_eq!(filter.factor, 256);
+        assert_eq!(filter.fstop_reduction, 8.0);
+        assert_eq!(filter.display_name, "ND256");
+        assert!(!filter.selected);
+        assert_eq!(filter.id, 0); // id set to 0 by new_custom
+    }
 }

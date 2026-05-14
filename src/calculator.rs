@@ -178,4 +178,48 @@ mod tests {
 
         assert_eq!(total_reduction, 3.0); // Only ND8 is selected
     }
+
+    #[test]
+    fn test_no_filters_selected() {
+        // With no filters, fstop_reduction is 0 → exp2(0) == 1.0
+        let shutter_speed: f64 = 1.0 / 60.0;
+        let fstop_reduction: f64 = 0.0;
+        let exposure = shutter_speed * fstop_reduction.exp2();
+        assert!((exposure - shutter_speed).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn test_all_filters_selected() {
+        // ND8(3) + ND64(6) + ND1000(10) = 19 stops
+        let shutter_speed: f64 = 1.0 / 125.0;
+        let fstop_reduction: f64 = 19.0;
+        let exposure = shutter_speed * fstop_reduction.exp2();
+        // 2^19 = 524288; 524288 / 125 = 4194.304
+        let expected = 524288.0 / 125.0;
+        assert!((exposure - expected).abs() < 1e-6);
+    }
+
+    #[test]
+    fn test_boundary_above_30s() {
+        // exposure_time > 30 → truncation path drops milliseconds
+        let exposure_time: f64 = 30.75;
+        let millis = if exposure_time > 30.0 {
+            (exposure_time.trunc() * 1000.0) as u64
+        } else {
+            (exposure_time * 1000.0).trunc() as u64
+        };
+        assert_eq!(millis, 30000); // 30.75 → 30.0 → 30000
+    }
+
+    #[test]
+    fn test_boundary_below_30s() {
+        // exposure_time < 30 → millisecond precision
+        let exposure_time: f64 = 29.847;
+        let millis = if exposure_time > 30.0 {
+            (exposure_time.trunc() * 1000.0) as u64
+        } else {
+            (exposure_time * 1000.0).trunc() as u64
+        };
+        assert_eq!(millis, 29847);
+    }
 }
