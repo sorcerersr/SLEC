@@ -28,6 +28,7 @@ features = [
   "OscillatorType",
   "Window",
   "MediaQueryList",
+  "Document",
 ]
 
 [profile]

@@ -3,6 +3,7 @@
 rust_i18n::i18n!("locales", fallback = "en");
 
 use dioxus::prelude::*;
+use web_sys::window;
 
 mod components;
 mod model;
@@ -61,6 +62,23 @@ static APP_STATE: GlobalSignal<AppState> = Signal::global(|| AppState {
 
 #[component]
 fn app() -> Element {
+    use_effect(move || {
+        // Hide browser controls when running as PWA on Android
+        if let Some(doc) = window().and_then(|w| w.document())
+            && let Ok(script) = doc.create_element("script")
+        {
+            script.set_text_content(Some(
+                r#"if (window.matchMedia('(display-mode: standalone)').matches) {
+                    window.scrollTo(0, 1);
+                    window.addEventListener('scroll', function() {
+                        window.scrollTo(0, 1);
+                    }, { passive: true });
+                }"#,
+            ));
+            let _ = doc.head().unwrap().append_child(&script).map(|_| ());
+        }
+    });
+
     rsx! {
         Header {}
         Main {}
